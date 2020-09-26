@@ -523,3 +523,17 @@ def generate_graph(cache, arcs=[]):
                     # print(o)
                     graph.add_edge(pn.rid, cnode.rid, color=colors[o], label=kind[o])
     return graph
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--input", required=True, help="python files(s) to be parsed (comma separated)")
+    parser.add_argument("--output", required=True, help="output file")
+
+    args = parser.parse_args()
+
+    cfg = generate_control_flow(read_files(args.input))
+    graph = generate_graph(cfg)
+    graph.draw(args.output, prog="dot")
