@@ -4,18 +4,64 @@ This python package provides useful modules and extensions for python developmen
 
 # Table of Contents
 - [Installation](#installation)
-- [Getting Started](#getting-started)
 - [Examples and Features](#examples-and-features)
 
 
 ## Installation
 
-...
-
-## Getting Started
-
-...
+For now feel free to just clone the repository.
 
 ## Examples and Features
 
-...
+<details>
+<summary>Const type</summary>
+
+Basic const type implementation.
+
+Use it as the metaclass, when implementing a class containing readonly attributes.
+
+   ```python
+    class MyClass(metaclass=Const):
+        myparam = Const.Attribute("xyz")
+   ```
+
+   This will define myparam as readonly.
+   Each try to change its value - be it as class attribute or instance attribute - will raise an AttributeError:
+
+   ```python
+    MyClass.my_param = 5
+    MyClass().my_param = "abc"
+   ```
+</details>
+
+<details>
+<summary>Datetime</summary>
+
+datetime extensions for getting start and end of day, week, month and year
+</details>
+
+<details>
+<summary>Plot</summary>
+
+matplotlib.pyplot extensions for creating grids, line/bar charts and timelines
+</details>
+
+<details>
+<summary>SMTP</summary>
+smtplib extension for sending multipart html messages with embedded images or just attachments.
+
+Example(s):
+   ```python
+    from smtp_extensions import SMTP
+
+    with SMTP("localhost", 25) as smtp:
+        smtp.sendhtml(sender="From <from@address>",
+                      subject="subject",
+                      message="<html><img src=\"cid:image1\" width=100%><br><img src=\"cid:image2\" width=100%></html>",
+                      recipients="To <to@address>,To2 <to2@address>",
+                      bccs="hidden@address,hidden2@address",
+                      attachments=["filepath1", "filepath2"],
+                      images=["<filepath of image1>", "<filepath of image2>"])
+
+   ```
+</details>
