@@ -41,6 +41,20 @@ datetime extensions for getting start and end of day, week, month and year
 </details>
 
 <details>
+<summary>Environment</summary>
+
+environment class to be used for running python scripts, tools etc. in
+
+Example to run a tool in a virtual environment:
+   ```python
+    import logging
+    from python_library.environment import Environment
+
+    Environment().activate(env_mode=Environment.EnvMode.VIRTUAL, refresh_mode=Environment.RefreshMode.SMART, log_level=logging.DEBUG)
+   ```
+</details>
+
+<details>
 <summary>Plot</summary>
 
 matplotlib.pyplot extensions for creating grids, line/bar charts and timelines
