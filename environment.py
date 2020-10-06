@@ -21,10 +21,20 @@ class Environment(metaclass=Singleton):
         VIRTUAL = 1
 
     class LogMode(IntEnum):
+        """Logging disabled."""
+        NONE = 0
         """Logging to console only."""
-        CONSOLE = 0
+        CONSOLE = 1
         """Logging to console and file."""
-        FILE = 1
+        FILE = 2
+
+    class RefreshMode(IntEnum):
+        """Do nothing, just activate virtual env in case of virtual env mode."""
+        NONE = 0
+        """Recreate venv path (if env_mode is 'virtual') and reinstall requirements."""
+        FORCE = 1
+        """create venv path (if env_mode is 'virtual' and path does not exist) and reinstall requirements."""
+        SMART = 2
 
     def __init__(self):
         self._name = os.path.basename(os.getcwd())
@@ -33,22 +43,26 @@ class Environment(metaclass=Singleton):
         self._version_info = {"python": ".".join(map(str, sys.version_info[0:3]))}
         self._configuration = {}
 
-    def activate(self, env_mode: EnvMode = EnvMode.VIRTUAL, log_mode: LogMode = LogMode.FILE, update_requirements=True, **kwargs):
-        """Activate stage."""
+    def activate(self, env_mode: EnvMode = EnvMode.VIRTUAL, **kwargs):
+        """Activate environment."""
 
         # TODO: add option to pass list of requirements
-        # TODO: move update_requirements to kwargs
         env_path = kwargs.pop("env_path", None) or "venv"
+        refresh_mode = kwargs.pop("refresh_mode", None) or Environment.RefreshMode.NONE
+        log_mode = kwargs.pop("log_mode", None) or Environment.LogMode.NONE
         log_level = kwargs.pop("log_level", None) or logging.INFO
+
+        assert not kwargs, "Unknown arguments: %r" % kwargs
 
         self._activate_logging(log_mode=log_mode, log_level=log_level)
 
-        if env_mode == self.EnvMode.VIRTUAL:
-            if update_requirements:
+        if env_mode == Environment.EnvMode.VIRTUAL:
+            if refresh_mode == Environment.RefreshMode.FORCE or not os.path.exists(env_path):  # or env_path does not exist
                 self._create_virtual_environment(env_path=env_path)
+                refresh_mode = Environment.RefreshMode.FORCE  # when (re-)creating virtual env, required packages needs to be installed as well
             self._activate_virtual_environment(env_path=env_path)
 
-        if update_requirements:
+        if refresh_mode > Environment.RefreshMode.NONE:
 
             requirements = []
 
@@ -80,7 +94,8 @@ class Environment(metaclass=Singleton):
 
         self._update_version_info()
 
-    def _activate_logging(self, log_mode: LogMode = LogMode.FILE, log_level=None, log_name=None):
+    def _activate_logging(self, log_mode: LogMode = LogMode.NONE, log_level=None, log_name=None):
+        """Activate logging."""
 
         formatter = logging.Formatter("%(asctime)s:%(levelname)s:%(name)s:%(message)s")
 
@@ -90,13 +105,16 @@ class Environment(metaclass=Singleton):
         for handler in logger.handlers:
             logger.removeHandler(handler)
 
+        if log_mode <= Environment.LogMode.NONE:
+            return
+
         # create console handler
         ch = logging.StreamHandler()
         ch.setFormatter(formatter)
         ch.setLevel(log_level or logging.INFO)
         logger.addHandler(ch)
 
-        if log_mode < self.LogMode.FILE:
+        if log_mode < Environment.LogMode.FILE:
             return
 
         # create file handler
