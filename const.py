@@ -12,7 +12,7 @@ class Const(type):
 
     Example:
         class MyClass(metaclass=Const):
-            myparam = Const.Attribute("xyz")
+            my_param = Const.Attribute("xyz")
 
     This will define myparam as readonly.
     Each try to change its value - be it as class attribute or instance attribute - will raise an AttributeError:
@@ -22,7 +22,7 @@ class Const(type):
 
     def __setattr__(cls, name, value):
         """Set attribute value (if allowed)."""
-        # these two lines look like the more proper check, but there's a easier approach used below
+        # these two lines look like the more proper check, but there's an easier approach used below
         #     attributes = tuple([item for item in Const.__dict__.values() if isinstance(item, type)])
         #     if isinstance(getattr(cls, name, None), attributes):
         attr = type(getattr(cls, name, None))
@@ -63,7 +63,7 @@ class ConstBase(metaclass=Const):
 
     Example:
         class MyClass(ConstBase):
-            myparam = Const.Attribute("xyz")
+            my_param = Const.Attribute("xyz")
 
     This will define myparam as readonly.
     Each try to change its value - be it as class attribute or instance attribute - will raise an AttributeError:
@@ -73,7 +73,7 @@ class ConstBase(metaclass=Const):
 
     def __setattr__(self, name, value):
         """Set attribute value (if allowed)."""
-        # these two lines look like the more proper check, but there's a easier approach used below
+        # these two lines look like the more proper check, but there's an easier approach used below
         #     attributes = tuple([item for item in Const.__dict__.values() if isinstance(item, type)])
         #     if isinstance(getattr(self, name, None), attributes):
         attr = type(getattr(self, name, None))
