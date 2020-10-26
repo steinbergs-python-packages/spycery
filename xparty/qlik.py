@@ -14,7 +14,7 @@ from websocket import create_connection
 
 
 class Qlik(object):
-    """The Qlik extension class.
+    """The Qlik class.
 
        Can be used together with QlikSense Desktop in order to automate data updates.
        Performs methods as available via http://localhost:4848/dev-hub/engine-api-explorer.

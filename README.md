@@ -13,6 +13,8 @@ For now feel free to just clone the repository.
 
 ## Examples and Features
 
+### Basics
+
 <details>
 <summary>Const type</summary>
 
@@ -22,7 +24,7 @@ Use it as the metaclass, when implementing a class containing readonly attribute
 
    ```python
     class MyClass(metaclass=Const):
-        myparam = Const.Attribute("xyz")
+        my_param = Const.Attribute("xyz")
    ```
 
    This will define myparam as readonly.
@@ -32,12 +34,6 @@ Use it as the metaclass, when implementing a class containing readonly attribute
     MyClass.my_param = 5
     MyClass().my_param = "abc"
    ```
-</details>
-
-<details>
-<summary>Datetime</summary>
-
-datetime extensions for getting start and end of day, week, month and year
 </details>
 
 <details>
@@ -52,6 +48,14 @@ Example to run a tool in a virtual environment:
 
     Environment().activate(env_mode=Environment.EnvMode.VIRTUAL, refresh_mode=Environment.RefreshMode.SMART, log_level=logging.DEBUG)
    ```
+</details>
+
+### Extensions
+
+<details>
+<summary>Datetime</summary>
+
+datetime extensions for getting start and end of day, week, month and year
 </details>
 
 <details>
