@@ -1,4 +1,4 @@
-# python_library
+# spycery
 
 This python package provides useful modules and extensions for python development.
 
