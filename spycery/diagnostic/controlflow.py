@@ -6,7 +6,7 @@
 import ast
 import re
 import astor
-import pygraphviz
+import graphviz
 
 
 class ControlFlowRegistry:
@@ -420,7 +420,7 @@ def generate_control_flow(source_code, remove_start_stop=True):
 
 def get_control_flow(file_names):
     control_flow = ControlFlow()
-    control_flow.gen_cfg(read_files(file_names))
+    control_flow.generate_control_flow(read_files(file_names))
     cache = ControlFlowRegistry.cache
     g = {}
     for k, v in cache.items():
@@ -477,8 +477,8 @@ def generate_graph(cache, arcs=[]):
         return v
     colors = {-1: None, 0: "green", 1: "red"}
     kind = {-1: None, 0: "true", 1: "false"}
-    graph = pygraphviz.AGraph(strict=False, directed=True)
-    cov_lines = set(i for i,j in arcs)
+    graph = graphviz.Digraph(strict=False)
+    cov_lines = set(i for i, j in arcs)
     for nid, cnode in cache.items():
         lineno = cnode.lineno()
         shape, peripheries = "oval", "1"
@@ -490,38 +490,36 @@ def generate_graph(cache, arcs=[]):
         else:
             shape = "rectangle"
 
-        graph.add_node(cnode.rid, shape=shape, peripheries=peripheries)
-        n = graph.get_node(cnode.rid)
-        n.attr["label"] = "%d: %s" % (lineno, unhack(cnode.source()))
+        graph.node(str(cnode.rid), "%d: %s" % (lineno, unhack(cnode.source())), shape=shape, peripheries=peripheries)
 
         for pn in cnode.parents:
             plineno = pn.lineno()
             if hasattr(pn, "calllink") and pn.calllink > 0 and not hasattr(cnode, "calleelink"):
-                graph.add_edge(pn.rid, cnode.rid, style="dotted", weight=100)
+                graph.edge(str(pn.rid), str(cnode.rid), style="dotted", weight=100)
                 continue
 
             if arcs:
-                if  (plineno, lineno) in arcs:
-                    graph.add_edge(pn.rid, cnode.rid, color="green")
+                if (plineno, lineno) in arcs:
+                    graph.edge(str(pn.rid), str(cnode.rid), color="green")
                 elif plineno == lineno and lineno in cov_lines:
-                    graph.add_edge(pn.rid, cnode.rid, color="green")
+                    graph.edge(str(pn.rid), str(cnode.rid), color="green")
                 elif hasattr(cnode, "fn_exit_node") and plineno in cov_lines:  # child is exit and parent is covered
-                    graph.add_edge(pn.rid, cnode.rid, color="green")
+                    graph.edge(str(pn.rid), str(cnode.rid), color="green")
                 elif hasattr(pn, "fn_exit_node") and len(set(n.lineno() for n in pn.parents) | cov_lines) > 0:  # parent is exit and one of its parents is covered.
-                    graph.add_edge(pn.rid, cnode.rid, color="green")
+                    graph.edge(str(pn.rid), str(cnode.rid), color="green")
                 elif plineno in cov_lines and hasattr(cnode, "calleelink"): # child is a callee (has calleelink) and one of the parents is covered.
-                    graph.add_edge(pn.rid, cnode.rid, color="green")
+                    graph.edge(str(pn.rid), str(cnode.rid), color="green")
                 else:
-                    graph.add_edge(pn.rid, cnode.rid, color="red")
+                    graph.edge(str(pn.rid), str(cnode.rid), color="red")
             else:
                 order = {c.rid: rid for rid,c in enumerate(pn.children)}
                 if len(order) < 2:
-                    graph.add_edge(pn.rid, cnode.rid)
+                    graph.edge(str(pn.rid), str(cnode.rid))
                 else:
                     # print(order, pn.rid, "(" + str(pn.lineno()) + ")" + "[" + pn.source() + "]", cnode.rid, "(" + str(cnode.lineno()) + ")" + "[" + cnode.source() + "]", cnode.items())
                     o = order.get(cnode.rid, -1)
                     # print(o)
-                    graph.add_edge(pn.rid, cnode.rid, color=colors[o], label=kind[o])
+                    graph.edge(str(pn.rid), str(cnode.rid), color=colors[o], label=kind[o])
     return graph
 
 
@@ -536,4 +534,4 @@ if __name__ == "__main__":
 
     cfg = generate_control_flow(read_files(args.input))
     graph = generate_graph(cfg)
-    graph.draw(args.output, prog="dot")
+    graph.render(args.output, format="pdf", cleanup=True)
