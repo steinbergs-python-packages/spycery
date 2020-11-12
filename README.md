@@ -93,3 +93,17 @@ Example(s):
 
    ```
 </details>
+
+### XParty
+
+<details>
+<summary>Jira</summary>
+
+module for JIRA interaction
+</details>
+
+<details>
+<summary>Qlik</summary>
+
+module for handling QlikSense apps
+</details>
