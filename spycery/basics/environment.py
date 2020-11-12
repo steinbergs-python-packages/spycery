@@ -7,7 +7,7 @@ import logging
 import os
 import sys
 
-from .singleton import Singleton
+from spycery.basics.singleton import Singleton
 
 
 class Environment(metaclass=Singleton):

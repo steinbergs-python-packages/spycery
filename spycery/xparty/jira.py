@@ -10,7 +10,7 @@ import requests
 import requests_toolbelt
 import urllib.parse
 
-from .datetime_extensions import DateTimeExtensions as dte
+from spycery.extensions.datetime_extensions import DateTimeExtensions as dte
 
 
 class Jira(object):
