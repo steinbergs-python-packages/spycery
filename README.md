@@ -12,8 +12,8 @@ This python package provides useful modules and extensions for python developmen
 To install spycery, you can use (one of) the following command(s):
 ```
 $ pip install git+https://github.com/steinbergs-python-packages/spycery
-$ pip install git+https://github.com/steinbergs-python-packages/spycery@v0.0.1
-$ pip install https://github.com/steinbergs-python-packages/spycery/archive/v0.0.1/spycery.zip
+$ pip install git+https://github.com/steinbergs-python-packages/spycery@v0.0.2
+$ pip install https://github.com/steinbergs-python-packages/spycery/archive/v0.0.2/spycery.zip
 ```
 
 To uninstall spycery, you can use the following command:
