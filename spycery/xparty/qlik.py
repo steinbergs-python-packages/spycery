@@ -9,7 +9,7 @@ import logging
 import uuid
 import shutil
 
-# needs websocket and websocket-client
+# needs websocket-client
 from websocket import create_connection
 
 

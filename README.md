@@ -33,6 +33,9 @@ Basic const type implementation.
 Use it as the metaclass, when implementing a class containing readonly attributes.
 
    ```python
+    from spycery.basics.const import Const
+
+
     class MyClass(metaclass=Const):
         my_param = Const.Attribute("xyz")
    ```
@@ -54,7 +57,9 @@ environment class to be used for running python scripts, tools etc. in
 Example to run a tool in a virtual environment:
    ```python
     import logging
-    from python_library.environment import Environment
+
+    from spycery.basics.environment import Environment
+
 
     Environment().activate(env_mode=Environment.EnvMode.VIRTUAL, refresh_mode=Environment.RefreshMode.SMART, log_level=logging.DEBUG)
    ```
@@ -80,7 +85,8 @@ smtplib extension for sending multipart html messages with embedded images or ju
 
 Example(s):
    ```python
-    from smtp_extensions import SMTP
+    from spycery.extensions.smtp_extensions import SMTP
+
 
     with SMTP("localhost", 25) as smtp:
         smtp.sendhtml(sender="From <from@address>",
