@@ -50,7 +50,7 @@ class Environment(metaclass=Singleton):
         env_path = kwargs.pop("env_path", None) or "venv"
         refresh_mode = kwargs.pop("refresh_mode", None) or Environment.RefreshMode.NONE
         log_mode = kwargs.pop("log_mode", None) or Environment.LogMode.NONE
-        log_level = kwargs.pop("log_level", None) or logging.INFO
+        log_level = kwargs.pop("log_level", None)  # None = default mode (sets INFO level for console and DEBUG for file)
 
         assert not kwargs, "Unknown arguments: %r" % kwargs
 
