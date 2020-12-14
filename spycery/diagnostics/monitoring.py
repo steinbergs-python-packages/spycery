@@ -41,6 +41,7 @@ class ResourceMonitor(threading.Thread):
                 setattr(thread, "label", label)
 
     def __init__(self, *args, **kwargs):
+        self._destpath = kwargs.pop("destpath", None) or "."
         self._interval = kwargs.pop("interval", None) or 1.0
         self._pid = os.getpid()
         self._stop = threading.Event()
@@ -48,7 +49,8 @@ class ResourceMonitor(threading.Thread):
         super().__init__(*args, **kwargs)
 
     def run(self):
-        csv_file = open(f"monitoring_{datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S')}_{self._pid}.csv", "w")
+        os.makedirs(f"{self._destpath}", exist_ok=True)
+        csv_file = open(f"{self._destpath}/monitoring_{datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S')}_{self._pid}.csv", "w")
         csv_file.write("timestamp;step_name;cpu_usage;mem_usage;reads;writes\n")
 
         last_read_count = 0
