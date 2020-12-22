@@ -120,7 +120,7 @@ class Environment(metaclass=Singleton):
 
         # create file handler
         os.makedirs(os.path.dirname(log_file_path or "results") or ".", exist_ok=True)
-        fh = logging.FileHandler((log_file_path or "results") + ("" if log_file_path and log_file_path.endswith(".log") else ".log"))
+        fh = logging.FileHandler((log_file_path or "results") + ("" if log_file_path and log_file_path.endswith(".log") else ".log"), mode="w")
         fh.setFormatter(formatter)
         fh.setLevel(log_level or logging.DEBUG)
         logger.addHandler(fh)
