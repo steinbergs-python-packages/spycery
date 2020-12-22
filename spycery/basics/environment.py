@@ -51,10 +51,11 @@ class Environment(metaclass=Singleton):
         refresh_mode = kwargs.pop("refresh_mode", None) or Environment.RefreshMode.NONE
         log_mode = kwargs.pop("log_mode", None) or Environment.LogMode.NONE
         log_level = kwargs.pop("log_level", None)  # None = default mode (sets INFO level for console and DEBUG for file)
+        log_file_path = kwargs.pop("log_file_path", None)
 
         assert not kwargs, "Unknown arguments: %r" % kwargs
 
-        self._activate_logging(log_mode=log_mode, log_level=log_level)
+        self._activate_logging(log_mode=log_mode, log_level=log_level, log_file_path=log_file_path)
 
         if env_mode == Environment.EnvMode.VIRTUAL:
             if refresh_mode == Environment.RefreshMode.FORCE or not os.path.exists(env_path):  # or env_path does not exist
@@ -94,7 +95,7 @@ class Environment(metaclass=Singleton):
 
         self._update_version_info()
 
-    def _activate_logging(self, log_mode: LogMode = LogMode.NONE, log_level=None, log_name=None):
+    def _activate_logging(self, log_mode: LogMode = LogMode.NONE, log_level=None, log_file_path=None):
         """Activate logging."""
 
         formatter = logging.Formatter("%(asctime)s:%(levelname)s:%(name)s:%(message)s")
@@ -118,8 +119,8 @@ class Environment(metaclass=Singleton):
             return
 
         # create file handler
-        os.makedirs("results", exist_ok=True)
-        fh = logging.FileHandler(os.path.join("results", (log_name or "results") + ".log"))
+        os.makedirs(os.path.dirname(log_file_path or "results") or ".", exist_ok=True)
+        fh = logging.FileHandler((log_file_path or "results") + ("" if log_file_path and log_file_path.endswith(".log") else ".log"))
         fh.setFormatter(formatter)
         fh.setLevel(log_level or logging.DEBUG)
         logger.addHandler(fh)
