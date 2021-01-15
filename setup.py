@@ -5,7 +5,7 @@ setup(
     description="python package providing useful modules and extensions for python development",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    version="v0.0.4",
+    version="v0.0.5",
     url="https://github.com/steinbergs-python-packages/spycery",
     author="Stephan Steinberg",
     author_email="st.steinberg@t-online.de",
